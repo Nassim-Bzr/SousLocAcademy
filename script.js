@@ -48,9 +48,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const videoThumbnail = document.getElementById('videoThumbnail');
     const videoIframe = document.getElementById('videoIframe');
     
+    // Gestion du lecteur vidéo YouTube du centre
+    const videoCenterContainer = document.getElementById('videoCenterContainer');
+    const videoCenterThumbnail = document.getElementById('videoCenterThumbnail');
+    const videoCenterIframe = document.getElementById('videoCenterIframe');
+    
     if (videoContainer && videoThumbnail && videoIframe) {
         videoContainer.addEventListener('click', function() {
             playYouTubeVideo();
+        });
+    }
+    
+    if (videoCenterContainer && videoCenterThumbnail && videoCenterIframe) {
+        videoCenterContainer.addEventListener('click', function() {
+            playCenterYouTubeVideo();
         });
     }
     
@@ -74,6 +85,58 @@ document.addEventListener('DOMContentLoaded', function() {
             videoIframe.style.opacity = '1';
         }, 100);
     }
+    
+    function playCenterYouTubeVideo() {
+        // URL de la vidéo YouTube avec autoplay
+        const youtubeUrl = 'https://www.youtube.com/embed/RF-zq7qsf2c?autoplay=1&rel=0&showinfo=0';
+        
+        // Masquer le thumbnail et afficher l'iframe plein écran
+        videoCenterThumbnail.style.display = 'none';
+        videoCenterIframe.style.display = 'block';
+        
+        // Charger la vidéo dans l'iframe
+        const iframe = videoCenterIframe.querySelector('iframe');
+        iframe.src = youtubeUrl;
+        
+        // Empêcher le scroll du body
+        document.body.style.overflow = 'hidden';
+        
+        // Animation d'apparition
+        videoCenterIframe.style.opacity = '0';
+        videoCenterIframe.style.transition = 'opacity 0.3s ease';
+        
+        setTimeout(() => {
+            videoCenterIframe.style.opacity = '1';
+        }, 50);
+    }
+    
+    // Fonction pour fermer la vidéo du centre
+    function closeCenterVideo() {
+        videoCenterIframe.style.display = 'none';
+        videoCenterThumbnail.style.display = 'block';
+        
+        // Réactiver le scroll du body
+        document.body.style.overflow = 'auto';
+        
+        // Arrêter la vidéo
+        const iframe = videoCenterIframe.querySelector('iframe');
+        iframe.src = '';
+    }
+    
+    // Gestionnaire pour le bouton de fermeture
+    document.addEventListener('DOMContentLoaded', function() {
+        const closeButton = document.getElementById('closeVideoCenter');
+        if (closeButton) {
+            closeButton.addEventListener('click', closeCenterVideo);
+        }
+        
+        // Fermer avec la touche Échap
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && videoCenterIframe && videoCenterIframe.style.display === 'block') {
+                closeCenterVideo();
+            }
+        });
+    });
     
     // Fonction pour afficher le message de succès
     function showSuccessMessage() {
